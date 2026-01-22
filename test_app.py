@@ -1,5 +1,6 @@
 import pytest
 from app import app
+from unittest.mock import patch, MagicMock
 
 @pytest.fixture
 def client():
@@ -7,7 +8,12 @@ def client():
     with app.test_client() as client:
         yield client
 
+
 def test_homepage(client):
-    response = client.get('/')
-    assert response.status_code == 200
-    assert b"Hello" in response.data
+    with patch('app.cache') as mock_redis:
+        mock_redis.incr.return_value = 5
+
+        response = client.get('/')
+
+        assert response.status_code == 200
+        assert b"5 times" in response.data

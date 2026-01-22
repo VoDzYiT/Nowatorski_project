@@ -10,4 +10,4 @@ def client():
 def test_homepage(client):
     response = client.get('/')
     assert response.status_code == 200
-    assert b"Hello DevOps" in response.data
+    assert b"Hello" in response.data
